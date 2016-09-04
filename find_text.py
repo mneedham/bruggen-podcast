@@ -28,13 +28,10 @@ for idx, file in enumerate(glob.glob("data/*")):
 
 stemmer = nltk.stem.porter.PorterStemmer()
 punctuation_map = dict((ord(char), None) for char in string.punctuation)
-
 def stemmer_tokens(tokens):
     return [stemmer.stem(item) for item in tokens]
-
 def normalize(text):
-    return stem_tokens(nltk.word_tokenize(text.lower().translate(punctuation_map)))
-
+    return stemmer_tokens(nltk.word_tokenize(text.lower().translate(punctuation_map)))
 
 tf = TfidfVectorizer(analyzer='word', min_df = 0, stop_words = 'english', tokenizer=normalize)
 tfidf_matrix =  tf.fit_transform(corpus)
