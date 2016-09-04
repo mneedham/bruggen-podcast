@@ -4,6 +4,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 from sklearn.manifold import TSNE
 from sklearn.decomposition import TruncatedSVD
+import nltk, string
 
 import requests
 import glob
@@ -25,7 +26,17 @@ for idx, file in enumerate(glob.glob("data/*")):
     corpus.append(content)
     file_mapping[idx] = file
 
-tf = TfidfVectorizer(analyzer='word', min_df = 0, stop_words = 'english')
+stemmer = nltk.stem.porter.PorterStemmer()
+punctuation_map = dict((ord(char), None) for char in string.punctuation)
+
+def stemmer_tokens(tokens):
+    return [stemmer.stem(item) for item in tokens]
+
+def normalize(text):
+    return stem_tokens(nltk.word_tokenize(text.lower().translate(punctuation_map)))
+
+
+tf = TfidfVectorizer(analyzer='word', min_df = 0, stop_words = 'english', tokenizer=normalize)
 tfidf_matrix =  tf.fit_transform(corpus)
 
 reducer = TruncatedSVD(n_components=100)
