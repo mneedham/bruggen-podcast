@@ -27,9 +27,10 @@ for idx, file in enumerate(glob.glob("data/*")):
     file_mapping[idx] = file
 
 stemmer = nltk.stem.porter.PorterStemmer()
+lemmatizer = nltk.stem.WordNetLemmatizer()
 punctuation_map = dict((ord(char), None) for char in string.punctuation)
 def stemmer_tokens(tokens):
-    return [stemmer.stem(item) for item in tokens]
+    return [lemmatizer.lemmatize(stemmer.stem(item)) for item in tokens]
 def normalize(text):
     return stemmer_tokens(nltk.word_tokenize(text.lower().translate(punctuation_map)))
 
